@@ -50,10 +50,10 @@ func Handle(conn net.Conn) {
 		//if row != Ping {
 		//	continue
 		//}
-		_, err := conn.Write([]byte("PONG\n"))
+		_, err := conn.Write([]byte("PONG"))
 		if err != nil {
 			return
 		}
-		time.Sleep(time.Second)
+		time.Sleep(5 * time.Second)
 	}
 }
