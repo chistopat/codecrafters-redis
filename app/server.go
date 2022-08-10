@@ -8,8 +8,6 @@ import (
 	"os"
 )
 
-const Ping = "PING"
-
 func main() {
 	fmt.Println("My simple redis started!")
 
@@ -51,7 +49,7 @@ func Handle(conn net.Conn) {
 		//if row != Ping {
 		//	continue
 		//}
-		_, err = conn.Write([]byte("PONG\r\n"))
+		_, err = conn.Write([]byte("+PONG\r\n"))
 		if err != nil {
 			return
 		}
