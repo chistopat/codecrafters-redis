@@ -54,13 +54,17 @@ func Handle(in *bufio.Reader, out *bufio.Writer) {
 		case token == "echo":
 			out.Write([]byte(fmt.Sprintf("+%s\r\n", NextToken(scanner))))
 		case token == "set":
-			fmt.Println("setting")
 			key := NextToken(scanner)
 			value := NextToken(scanner)
 			redis[key] = value
+			out.Write([]byte(fmt.Sprintf("+OK\r\n")))
 		case token == "get":
 			key := NextToken(scanner)
-			out.Write([]byte(fmt.Sprintf("+%s\r\n", redis[key])))
+			if value, ok := redis[key]; !ok {
+				out.Write([]byte(fmt.Sprintf("+(nil)\r\n")))
+			} else {
+				out.Write([]byte(fmt.Sprintf("+%s\r\n", value)))
+			}
 		default:
 			fmt.Println(token)
 			continue
