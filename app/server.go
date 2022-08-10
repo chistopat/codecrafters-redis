@@ -51,7 +51,7 @@ func Handle(conn net.Conn) {
 		//if row != Ping {
 		//	continue
 		//}
-		_, err = conn.Write([]byte("PONG\n"))
+		_, err = conn.Write([]byte("PONG"))
 		if err != nil {
 			return
 		}
