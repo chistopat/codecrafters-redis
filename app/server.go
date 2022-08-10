@@ -54,7 +54,7 @@ func Handle(in *bufio.Reader, out *bufio.Writer) {
 			fmt.Println(arr)
 			out.Write([]byte(fmt.Sprintf("+%s\r\n", arr[1])))
 		default:
-			out.Write([]byte("+ERROR\r\n"))
+			out.Write([]byte("+PONG\n"))
 		}
 
 		out.Flush()
