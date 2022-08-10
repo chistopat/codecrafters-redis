@@ -54,6 +54,7 @@ func Handle(in *bufio.Reader, out *bufio.Writer) {
 		case token == "echo":
 			out.Write([]byte(fmt.Sprintf("+%s\r\n", NextToken(scanner))))
 		case token == "set":
+			fmt.Println("setting")
 			key := NextToken(scanner)
 			value := NextToken(scanner)
 			redis[key] = value
@@ -69,7 +70,9 @@ func Handle(in *bufio.Reader, out *bufio.Writer) {
 
 func NextToken(s *bufio.Scanner) string {
 	s.Scan()
+	fmt.Println(s.Text())
 	s.Scan()
+	fmt.Println(s.Text())
 	return s.Text()
 }
 
