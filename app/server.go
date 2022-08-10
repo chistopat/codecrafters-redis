@@ -50,9 +50,10 @@ func Handle(in *bufio.Reader, out *bufio.Writer) {
 		case token == "ping":
 			out.Write([]byte("+PONG\r\n"))
 		case token == "echo":
-			scanner.Scan()
-			scanner.Scan()
-			out.Write([]byte(fmt.Sprintf("+%s\r\n", scanner.Text())))
+			out.Write([]byte(fmt.Sprintf("+%s\r\n", NextToken(scanner))))
+		//case token == 'set':
+		//	key := NextToken(scanner)
+		//	value := NextToken(scanner)
 		default:
 			continue
 		}
@@ -60,19 +61,10 @@ func Handle(in *bufio.Reader, out *bufio.Writer) {
 	}
 }
 
-func ParseArray(n int, scan *bufio.Scanner) []string {
-	result := make([]string, 0, n)
-	n *= 2
-	for n != 0 {
-		n--
-		scan.Scan()
-		token := scan.Text()
-		if rune(token[0]) == '$' {
-			continue
-		}
-		result = append(result, token)
-	}
-	return result
+func NextToken(s *bufio.Scanner) string {
+	s.Scan()
+	s.Scan()
+	return s.Text()
 }
 
 // https://stackoverflow.com/questions/37530451/golang-bufio-read-multiline-until-crlf-r-n-delimiter
