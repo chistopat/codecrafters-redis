@@ -1,10 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"io"
 	"net"
 	"os"
-	"time"
 )
 
 const Ping = "PING"
@@ -37,23 +38,22 @@ func Handle(conn net.Conn) {
 		}
 	}(conn)
 
-	//reader := bufio.NewReader(conn)
+	reader := bufio.NewReader(conn)
 	for {
-		//row, err := reader.ReadString('\n')
-		//if err != nil {
-		//	if err != io.EOF {
-		//		fmt.Println("failed to read data, err:", err)
-		//	}
-		//	return
-		//}
+		_, err := reader.ReadString('\n')
+		if err != nil {
+			if err != io.EOF {
+				fmt.Println("failed to read data, err:", err)
+			}
+			return
+		}
 		//row = strings.TrimSpace(row)
 		//if row != Ping {
 		//	continue
 		//}
-		_, err := conn.Write([]byte("PONG"))
+		_, err = conn.Write([]byte("PONG\n"))
 		if err != nil {
 			return
 		}
-		time.Sleep(5 * time.Second)
 	}
 }
