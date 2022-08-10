@@ -3,8 +3,10 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"net"
 	"os"
+	"strings"
 )
 
 const Ping = "PING"
@@ -17,22 +19,42 @@ func main() {
 		fmt.Println("Failed to bind to port 6379")
 		os.Exit(1)
 	}
-	conn, err := l.Accept()
-	if err != nil {
-		fmt.Println("Error accepting connection: ", err.Error())
-		os.Exit(1)
-	}
 
 	for {
-		message, err := bufio.NewReader(conn).ReadString('\n')
+		conn, err := l.Accept()
 		if err != nil {
+			fmt.Println("Error accepting connection: ", err.Error())
+			os.Exit(1)
+		}
+		Handle(conn)
+	}
+}
+
+func Handle(conn net.Conn) {
+	defer func(conn net.Conn) {
+		err := conn.Close()
+		if err != nil {
+			fmt.Println("Alarm! can't close connection: ", err.Error())
+			os.Exit(1)
+		}
+	}(conn)
+
+	reader := bufio.NewReader(conn)
+	for {
+		row, err := reader.ReadString('\n')
+		if err != nil {
+			if err != io.EOF {
+				fmt.Println("failed to read data, err:", err)
+			}
+			return
+		}
+		row = strings.TrimSpace(row)
+		if row != Ping {
 			continue
 		}
-		if string(message) == Ping {
-			_, err = conn.Write([]byte("PONG" + "\n"))
-			if err != nil {
-				continue
-			}
+		_, err = conn.Write([]byte("PONG\n"))
+		if err != nil {
+			return
 		}
 	}
 }
