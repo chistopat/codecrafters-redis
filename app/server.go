@@ -102,6 +102,6 @@ func ScanCRLF(data []byte, atEOF bool) (advance int, token []byte, err error) {
 	if atEOF {
 		return len(data), dropCR(data), nil
 	}
-	// Request more data.
+	// Request more data. daa
 	return 0, nil, nil
 }
