@@ -8,8 +8,6 @@ import (
 	"os"
 )
 
-var redis = make(map[string]string)
-
 func main() {
 	fmt.Println("My simple redis started!")
 
@@ -53,13 +51,9 @@ func Handle(in *bufio.Reader, out *bufio.Writer) {
 			out.Write([]byte("+PONG\r\n"))
 		case token == "echo":
 			out.Write([]byte(fmt.Sprintf("+%s\r\n", NextToken(scanner))))
-		case token == "set":
-			key := NextToken(scanner)
-			value := NextToken(scanner)
-			redis[key] = value
-		case token == "get":
-			key := NextToken(scanner)
-			out.Write([]byte(fmt.Sprintf("+%s\r\n", redis[key])))
+		//case token == 'set':
+		//	key := NextToken(scanner)
+		//	value := NextToken(scanner)
 		default:
 			continue
 		}
