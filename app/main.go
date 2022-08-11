@@ -1,35 +1,22 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
-	"os"
+	"log"
+
+	net "redis/app/network"
+	"redis/app/redis"
 )
 
-const PORT = 6379
-
-type MyRedis struct{}
-
-func NewMyRedis() *MyRedis {
-	return &MyRedis{}
-}
-
-func (r *MyRedis) OnConnect(in *bufio.Reader, out *bufio.Writer) {
-	for {
-		_, _ = in.ReadString('\n')
-		_, _ = out.Write([]byte("+PONG\r\n"))
-		out.Flush()
-	}
-}
+const (
+	PORT = 6379
+	HOST = "0.0.0.0"
+)
 
 func main() {
-	fmt.Println("My simple redis started!")
-	cache := NewMyRedis()
-	server, err := NewNetworkServer("0.0.0.0", PORT, cache.OnConnect)
-
-	if err != nil {
-		fmt.Println("Failed to start network server")
-		os.Exit(1)
+	log.Println("My simple redis started!")
+	cache := redis.NewMyRedis()
+	server := net.NewNetworkServer(HOST, PORT, cache.OnConnect)
+	if err := server.Run(); err != nil {
+		log.Fatalf("can't start server: %v\n", err)
 	}
-	server.Run()
 }
