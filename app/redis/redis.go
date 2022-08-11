@@ -72,7 +72,7 @@ func (r *MyRedis) Set(key string, args ...string) []byte {
 	fmt.Println(args)
 	if len(args) == 4 {
 		duration, _ := strconv.Atoi(args[3])
-		r.timer[key] = time.Now().Unix() + int64(duration)
+		r.timer[key] = time.Now().UnixMilli() + int64(duration)
 	}
 	return []byte("+OK\r\n")
 }
@@ -88,7 +88,7 @@ func (r *MyRedis) Get(key string) []byte {
 
 func (r *MyRedis) CheckTTL(key string) {
 	if exp, ok := r.timer[key]; ok {
-		if exp <= time.Now().Unix() {
+		if exp <= time.Now().UnixMilli() {
 			delete(r.timer, key)
 			delete(r.storage, key)
 		}
