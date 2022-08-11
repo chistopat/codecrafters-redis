@@ -72,7 +72,7 @@ func (r *MyRedis) Set(key string, args ...string) []byte {
 	fmt.Println(args)
 	if len(args) == 4 {
 		duration, _ := strconv.Atoi(args[3])
-		r.timer[key] = time.Now().UnixMilli() + int64(duration)
+		r.timer[key] = NowAsUnixMilli() + int64(duration)
 	}
 	return []byte("+OK\r\n")
 }
@@ -88,9 +88,15 @@ func (r *MyRedis) Get(key string) []byte {
 
 func (r *MyRedis) CheckTTL(key string) {
 	if exp, ok := r.timer[key]; ok {
-		if exp <= time.Now().UnixMilli() {
+		if exp <= NowAsUnixMilli() {
 			delete(r.timer, key)
 			delete(r.storage, key)
 		}
 	}
+}
+
+// NowAsUnixMilli
+// https://stackoverflow.com/questions/24122821/go-time-now-unixnano-convert-to-milliseconds
+func NowAsUnixMilli() int64 {
+	return time.Now().UnixNano() / 1e6
 }
