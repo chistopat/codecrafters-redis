@@ -50,7 +50,7 @@ func (r *MyRedis) Invoke(command []string) []byte {
 	case "ECHO":
 		return r.Echo([]byte(command[1]))
 	case "SET":
-		return r.Set(command[1], command[2:]...)
+		return r.Set(command[1], command[1:]...)
 	case "GET":
 		return r.Get(command[1])
 	default:
@@ -67,10 +67,10 @@ func (r *MyRedis) Ping() []byte {
 }
 
 func (r *MyRedis) Set(key string, args ...string) []byte {
-	r.storage[key] = args[0]
+	r.storage[key] = args[1]
 	fmt.Println(args)
-	if len(args) == 3 {
-		duration, _ := strconv.Atoi(args[2])
+	if len(args) == 4 {
+		duration, _ := strconv.Atoi(args[3])
 		r.timer[key] = time.Now().Unix() + int64(duration)
 	}
 	return []byte("+OK\r\n")
