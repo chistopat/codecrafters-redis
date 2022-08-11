@@ -62,7 +62,6 @@ func Handle(in *bufio.Reader, out *bufio.Writer) {
 			key := NextToken(scanner)
 			out.Write([]byte(fmt.Sprintf("+%s\r\n", redis[key])))
 		default:
-			fmt.Println(token)
 			continue
 		}
 		out.Flush()
