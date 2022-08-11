@@ -68,6 +68,7 @@ func (r *MyRedis) Ping() []byte {
 
 func (r *MyRedis) Set(key string, args ...string) []byte {
 	r.storage[key] = args[0]
+	fmt.Println(args)
 	if len(args) == 3 {
 		duration, _ := strconv.Atoi(args[2])
 		r.timer[key] = time.Now().Unix() + int64(duration)
