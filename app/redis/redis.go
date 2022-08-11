@@ -3,11 +3,14 @@ package redis
 import (
 	"bufio"
 	"fmt"
+	"strconv"
 	"strings"
+	"time"
 )
 
 type MyRedis struct {
 	storage map[string]string
+	timer   map[string]int64
 }
 
 func NewMyRedis() *MyRedis {
@@ -47,7 +50,7 @@ func (r *MyRedis) Invoke(command []string) []byte {
 	case "ECHO":
 		return r.Echo([]byte(command[1]))
 	case "SET":
-		return r.Set(command[1], command[2])
+		return r.Set(command[1], command[1:]...)
 	case "GET":
 		return r.Get(command[1])
 	default:
@@ -63,15 +66,29 @@ func (r *MyRedis) Ping() []byte {
 	return []byte(fmt.Sprintf("+PONG\r\n"))
 }
 
-func (r *MyRedis) Set(key string, value string) []byte {
-	r.storage[key] = value
+func (r *MyRedis) Set(key string, args ...string) []byte {
+	r.storage[key] = args[0]
+	if len(args) == 3 {
+		duration, _ := strconv.Atoi(args[2])
+		r.timer[key] = time.Now().Unix() + int64(duration)
+	}
 	return []byte("+OK\r\n")
 }
 
 func (r *MyRedis) Get(key string) []byte {
+	r.CheckTTL(key)
 	if value, ok := r.storage[key]; !ok {
 		return []byte("(nil)\r\n")
 	} else {
 		return []byte(fmt.Sprintf("+%s\r\n", value))
+	}
+}
+
+func (r *MyRedis) CheckTTL(key string) {
+	if exp, ok := r.timer[key]; ok {
+		if exp <= time.Now().Unix() {
+			delete(r.timer, key)
+			delete(r.storage, key)
+		}
 	}
 }
