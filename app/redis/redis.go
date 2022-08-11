@@ -16,6 +16,7 @@ type MyRedis struct {
 func NewMyRedis() *MyRedis {
 	return &MyRedis{
 		storage: map[string]string{},
+		timer:   map[string]int64{},
 	}
 }
 
