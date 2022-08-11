@@ -49,16 +49,15 @@ func Handle(in *bufio.Reader, out *bufio.Writer) {
 		switch {
 		case token == "PING":
 			out.Write([]byte("+PONG\r\n"))
-			out.Flush()
 		case len(token) > 0 && rune(token[0]) == '*':
 			arr := ParseArray(int(token[1]-'0'), scanner)
 			fmt.Println(arr)
 			out.Write([]byte(fmt.Sprintf("+%s\r\n", arr[1])))
-			out.Flush()
 		default:
 			out.Write([]byte("+PONG\n"))
-			out.Flush()
 		}
+
+		out.Flush()
 	}
 }
 
