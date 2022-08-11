@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"net"
 	"os"
+	// Uncomment this block to pass the first stage
+	// "net"
+	// "os"
 )
-
-const Ping = "PING"
 
 func main() {
 	fmt.Println("My simple redis started!")
@@ -26,10 +27,13 @@ func main() {
 	for {
 		message, err := bufio.NewReader(conn).ReadString('\n')
 		if err != nil {
-			continue
+			_, err := conn.Write([]byte("ERROR" + "\n"))
+			if err != nil {
+				continue
+			}
 		}
-		if string(message) == Ping {
-			_, err = conn.Write([]byte("PONG" + "\n"))
+		if message == "PING" {
+			_, err := conn.Write([]byte("PONG" + "\n"))
 			if err != nil {
 				continue
 			}
