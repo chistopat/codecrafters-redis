@@ -78,7 +78,7 @@ func (r *MyRedis) Set(key string, args ...string) []byte {
 func (r *MyRedis) Get(key string) []byte {
 	r.CheckTTL(key)
 	if value, ok := r.storage[key]; !ok {
-		return []byte("(nil)\r\n")
+		return []byte("+(nil)\r\n")
 	} else {
 		return []byte(fmt.Sprintf("+%s\r\n", value))
 	}
