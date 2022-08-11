@@ -3,6 +3,7 @@ package redis
 import (
 	"bufio"
 	"fmt"
+	"log"
 )
 
 type Resp struct {
@@ -42,6 +43,7 @@ func (r *Resp) GetArrayLen(token string) (int, error) {
 
 func (r *Resp) NextToken() string {
 	r.s.Scan()
+	log.Println(r.s.Text())
 	return r.s.Text()
 }
 
