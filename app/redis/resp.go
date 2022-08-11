@@ -23,7 +23,8 @@ func (r *Resp) ParseArray() ([]string, error) {
 		return nil, err
 	}
 	results := make([]string, 0, n)
-	for n != 0 {
+	for n > 0 {
+		n--
 		token := r.NextToken()
 		if NeedSkip(token) {
 			continue
@@ -34,7 +35,7 @@ func (r *Resp) ParseArray() ([]string, error) {
 }
 
 func (r *Resp) GetArrayLen(token string) (int, error) {
-	if len(token) == 2 && token[0] == '*' {
+	if len(token) > 0 && token[0] == '*' {
 		return int(token[1]-'0') * 2, nil
 	}
 	return -1, fmt.Errorf("invalid array token: %s", token)

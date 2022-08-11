@@ -19,11 +19,11 @@ func NewMyRedis() *MyRedis {
 func (r *MyRedis) OnConnect(in *bufio.Reader, out *bufio.Writer) {
 	for {
 		command, err := r.ParseInput(in)
+		fmt.Println(command)
 		if err != nil {
 			fmt.Printf("%v\n", err)
 			continue
 		}
-		fmt.Println(command)
 		response := r.Invoke(command)
 		r.Send(response, out)
 	}
