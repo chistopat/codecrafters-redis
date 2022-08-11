@@ -3,7 +3,6 @@ package redis
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"strings"
 )
 
@@ -21,10 +20,10 @@ func (r *MyRedis) OnConnect(in *bufio.Reader, out *bufio.Writer) {
 	for {
 		command, err := r.ParseInput(in)
 		if err != nil {
-			log.Printf("%v\n", err)
+			fmt.Printf("%v\n", err)
 			continue
 		}
-		log.Println(command)
+		fmt.Println(command)
 		response := r.Invoke(command)
 		r.Send(response, out)
 	}

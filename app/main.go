@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	net "redis/app/network"
@@ -13,7 +14,7 @@ const (
 )
 
 func main() {
-	log.Println("My simple redis started!")
+	fmt.Println("My simple redis started!")
 	cache := redis.NewMyRedis()
 	server := net.NewNetworkServer(HOST, PORT, cache.OnConnect)
 	if err := server.Run(); err != nil {
