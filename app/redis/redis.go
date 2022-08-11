@@ -50,7 +50,7 @@ func (r *MyRedis) Invoke(command []string) []byte {
 	case "ECHO":
 		return r.Echo([]byte(command[1]))
 	case "SET":
-		return r.Set(command[1], command[1:]...)
+		return r.Set(command[1], command[2:]...)
 	case "GET":
 		return r.Get(command[1])
 	default:
