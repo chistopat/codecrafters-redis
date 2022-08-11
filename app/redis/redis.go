@@ -24,6 +24,7 @@ func (r *MyRedis) OnConnect(in *bufio.Reader, out *bufio.Writer) {
 			log.Printf("%v\n", err)
 			continue
 		}
+		log.Println(command)
 		response := r.Invoke(command)
 		r.Send(response, out)
 	}
@@ -35,13 +36,8 @@ func (r *MyRedis) ParseInput(in *bufio.Reader) ([]string, error) {
 }
 
 func (r *MyRedis) Send(data []byte, out *bufio.Writer) {
-	_, err := out.Write(data)
-	if err != nil {
-		err := out.Flush()
-		if err != nil {
-			return
-		}
-	}
+	out.Write(data)
+	out.Flush()
 }
 
 func (r *MyRedis) Invoke(command []string) []byte {
