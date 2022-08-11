@@ -72,6 +72,6 @@ func (r *MyRedis) Get(key string) []byte {
 	if value, ok := r.storage[key]; !ok {
 		return []byte("(nil)\r\n")
 	} else {
-		return []byte(fmt.Sprintf("%s\r\n", value))
+		return []byte(fmt.Sprintf("+%s\r\n", value))
 	}
 }
