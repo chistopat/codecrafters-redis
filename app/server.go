@@ -8,8 +8,6 @@ import (
 	"os"
 )
 
-const Ping = "PING"
-
 func main() {
 	fmt.Println("My simple redis started!")
 
@@ -48,42 +46,18 @@ func Handle(in *bufio.Reader, out *bufio.Writer) {
 	scanner.Split(ScanCRLF)
 	for scanner.Scan() {
 		token := scanner.Text()
-		switch token {
-		case Ping:
-			SendPong(out)
-		default:
-			SendError(out)
+		//row = strings.TrimSpace(row)
+		//if row != Ping {
+		//	continue
+		//}
+		fmt.Println(token)
+		_, err := out.Write([]byte("+PONG\r\n"))
+		if err != nil {
+			return
 		}
+		out.Flush()
 	}
 }
-
-func SendPong(out *bufio.Writer) {
-	_, err := out.Write([]byte("+PONG\r\n"))
-	if err != nil {
-		return
-	}
-}
-
-func SendError(out *bufio.Writer) {
-	_, err := out.Write([]byte("+ERROR\r\n"))
-	if err != nil {
-		return
-	}
-}
-
-//for scanner.Scan() {
-//token := scanner.Text()
-////row = strings.TrimSpace(row)
-////if row != Ping {
-////	continue
-////}
-//fmt.Println(token)
-//_, err := out.Write([]byte("+PONG\r\n"))
-//if err != nil {
-//return
-//}
-//out.Flush()
-//}
 
 // https://stackoverflow.com/questions/37530451/golang-bufio-read-multiline-until-crlf-r-n-delimiter
 // dropCR drops a terminal \r from the data.
